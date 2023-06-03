@@ -1,11 +1,11 @@
 from typing import List
-from pydantic import BaseModel
 from src.models.main import User, Method
+from pydantic import BaseModel, HttpUrl
 
 
 class ImageResult(BaseModel):
     index: int
-    image_url: str
+    image_url: HttpUrl
 
 
 class GenerateResult(BaseModel):
