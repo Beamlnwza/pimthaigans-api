@@ -12,6 +12,10 @@ from src.models.main import User, Method
 IMAGE_STORE_PATH = os.path.abspath("./src/store")
 BUCKET_NAME = "pimthaigans-image-container"
 
+# just make sure to have IMAGE_STORE_PATH folder created
+if not os.path.exists(IMAGE_STORE_PATH):
+    os.makedirs(IMAGE_STORE_PATH)
+
 router = APIRouter(
     prefix="/generate",
     tags=["Generate"],
@@ -73,9 +77,10 @@ async def generate_all(user: User):
 
         s3_path: str = f"{user.uuid}/{str(index).zfill(2)}.png"
         s3.upload_file(output_path, BUCKET_NAME, s3_path)
+        image_url = f'https://{BUCKET_NAME}.s3.amazonaws.com/{s3_path}'
 
         img_detail = ImageResult(index=index,
-                                 image_url=f'https://{BUCKET_NAME}.s3.amazonaws.com/{user.uuid}/{str(index).zfill(2)}.png')
+                                 image_url=image_url)
         result.append(img_detail)
 
         os.remove(output_path)
