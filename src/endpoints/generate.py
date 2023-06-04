@@ -37,7 +37,7 @@ async def status():
 
 @router.post("/")
 async def generate(user: User, index: int | None = None) -> GenerateResult:
-    if index:
+    if index or index == 0:
         result: GenerateResult = await generate_index(user, index)
         return result
 
