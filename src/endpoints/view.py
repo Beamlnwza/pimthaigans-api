@@ -11,6 +11,8 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+BUCKET_NAME = "pimthaigans-image-container"
+
 
 @router.get("/status")
 async def status():
@@ -40,12 +42,14 @@ async def view_index(user: User, index: int, path_objs) -> ViewResult:
     imgs = [obj for obj in path_objs if obj.endswith(
         f'{str(index).zfill(2)}.png')]
     if len(imgs) > 0:
-        return ViewResult(user=user, method=Method.index, result=[ViewImage(index=index, image_url=imgs[0])])
+        img_url = f'https://{BUCKET_NAME}.s3.amazonaws.com/{imgs[0]}'
+        return ViewResult(user=user, method=Method.index, result=[ViewImage(index=index, image_url=img_url)])
 
     return ViewResult(user=user, method=Method.index, result=None)
 
 
 async def view_all(user: User, path_objs) -> ViewResult:
+    img_urls = []
     for index in range(0, 88):
         imgs = [obj for obj in path_objs if obj.endswith(
             f'{str(index).zfill(2)}.png')]
