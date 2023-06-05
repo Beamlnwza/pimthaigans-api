@@ -28,22 +28,32 @@ async def view(user: UUID, index: int | None = None) -> ViewResult:
     if len(path_objs) == 0:
         return ViewResult(user=User(uuid=user), method=Method.index, result=None)
 
-    if index:
+    if index or index == 0:
         result: ViewResult = await view_index(User(uuid=user), index, path_objs)
         return result
 
     result: ViewResult = await view_all(User(uuid=user), path_objs)
     return result
 
+
 async def view_index(user: User, index: int, path_objs) -> ViewResult:
-    imgs = [obj for obj in path_objs if obj.endswith(f'{str(index).zfill(2)}.png')]
+    imgs = [obj for obj in path_objs if obj.endswith(
+        f'{str(index).zfill(2)}.png')]
     if len(imgs) > 0:
         return ViewResult(user=user, method=Method.index, result=[ViewImage(index=index, image_url=imgs[0])])
 
     return ViewResult(user=user, method=Method.index, result=None)
 
+
 async def view_all(user: User, path_objs) -> ViewResult:
     for index in range(0, 88):
-        imgs = [obj for obj in path_objs if obj.endswith(f'{str(index).zfill(2)}.png')]
+        imgs = [obj for obj in path_objs if obj.endswith(
+            f'{str(index).zfill(2)}.png')]
         if len(imgs) > 0:
-            return ViewResult(user=user, method=Method.all, result=[ViewImage(index=index, image_url=imgs[0])])
+            img_urls.append(
+                f'https://{BUCKET_NAME}.s3.amazonaws.com/{imgs[0]}')
+        else:
+            return ViewResult(user=user, method=Method.all, result=None)
+
+    return ViewResult(user=user, method=Method.all,
+                      result=[ViewImage(index=index, image_url=img_url) for index, img_url in enumerate(img_urls)])
