@@ -24,4 +24,7 @@ archive.zip
 # vim temporary files
 *~
 .*.sw?
+
 .vercel
+vercel.json
+.vercelignore
