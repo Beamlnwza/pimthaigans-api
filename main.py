@@ -4,7 +4,7 @@ from routes.api import router as api_router
 
 app = FastAPI()
 
-origins = ["http://localhost:5000"]
+origins = ["http://localhost:5000", "http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
