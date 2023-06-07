@@ -20,8 +20,12 @@ venv
 docs.zip
 archive.zip
 .env
+.local.env
 
 # vim temporary files
 *~
 .*.sw?
+
 .vercel
+vercel.json
+.vercelignore
