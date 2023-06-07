@@ -17,9 +17,9 @@ WORKDIR $HOME/app
 
 COPY --chown=user . $HOME/app
 
-RUN echo "SECRET_VARIABLE=placeholder" > $HOME/app/.env
+RUN touch $HOME/app/.env
 
-RUN --mount=type=secret,id=SECRET_EXAMPLE,mode=0444,required=true \
-    sed -i "s/placeholder/$(cat /run/secrets/SECRET_EXAMPLE)/" $HOME/app/.env
+RUN --mount=type=secret,id=S3,mode=0444,required=true \
+    echo "$(cat /run/secrets/S3)" >> $HOME/app/.env
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
